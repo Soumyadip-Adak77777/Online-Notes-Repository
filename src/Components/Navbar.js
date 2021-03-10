@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+import { useAuth } from "../contexts/AuthContext"
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import {Link} from "react-router-dom";
@@ -7,6 +8,8 @@ import './Navbar.css';
 import { IconContext } from 'react-icons';
 
 function Navbar(){
+    const [error, setError] = useState("")
+  const { currentUser, logout } = useAuth()
    const[sidebar,setSidebar]=useState(false)
    const showSidebar=()=>setSidebar(!sidebar)
         return (
@@ -25,6 +28,8 @@ function Navbar(){
                             </Link>
                         </li>
                         {SidebarData.map((item,index)=>{
+                            if(currentUser.email==="admin@gmail.com" && item.owner==="admin")
+                            {
                             return (
                                 <li key={index} className={item.cName}>
                                     <Link to={item.path}>
@@ -33,6 +38,17 @@ function Navbar(){
                                     </Link>
                                 </li>
                             )
+                            }else if(currentUser.email!=="admin@gmail.com" && item.owner==='student')
+                            {
+                                return (
+                                    <li key={index} className={item.cName}>
+                                        <Link to={item.path}>
+                                            {item.icon}
+                                            <span>{item.title}</span>
+                                        </Link>
+                                    </li>
+                                )
+                            }
                         })}
                     </ul>
                 </nav>
